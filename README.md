@@ -3,6 +3,12 @@
 Utilities for working with SCT, ASR and ESE files.
 This library can parse these files, and format them as GeoJSON data. 
 
+Install:
+
+```
+npm install sector-file-tools
+```
+
 Usage:
 
 ```

@@ -1,7 +1,7 @@
 {
   "name": "sector-file-tools",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Utilities for working with SCT, ASR and ESE files.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,6 +10,11 @@
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
   },
   "author": "Contributors to sector-file-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eirslett/sector-file-tools.git"
+  },
+  "homepage": "https://github.com/eirslett/sector-file-tools",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.2.11",
