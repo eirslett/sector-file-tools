@@ -9,9 +9,9 @@ Usage:
 import { parseSct } from 'sector-file-tools';
 import { parseSct, parseEse, parseAsr, toGeoJson } from 'sector-file-tools';
 
-const sct = parseSct2('.....');
-const ese = parseEse2('.....');
-const asr = parseAsr2('.....');
+const sct = parseSct('.....');
+const ese = parseEse('.....');
+const asr = parseAsr('.....');
 const geojson = toGeoJson(sct, ese, asr);
 
 console.log(geojson); // data
