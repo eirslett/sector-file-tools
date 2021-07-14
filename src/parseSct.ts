@@ -48,6 +48,7 @@ function getParts(str: string): string[] {
 export default function parseSct(input: string): SCT {
     const lines = input
         .split('\n')
+        .map(line => line.split(';')[0])
         .map(line => line.trim());
 
     const infoLines: string[] = [];

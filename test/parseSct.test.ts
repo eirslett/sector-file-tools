@@ -34,6 +34,33 @@ describe('Parse SCT', function() {
         expect(parseSct(';comment\n\n\n')).to.deep.equal(empty);
     });
 
+    it('ignores trailing comments', function() {
+        expect(parseSct(`
+[ARTCC]
+TMA - Upper Limit - ENCN, Kjevik         N058.43.57.000 E008.34.38.000 N058.41.45.000 E008.38.44.000 ; Some trailing comment
+                                         N058.41.45.000 E008.38.44.000 N058.28.37.000 E009.02.52.000
+                                         N058.28.37.000 E009.02.52.000 N058.24.22.000 E009.10.35.000
+        `)).to.deep.equal({
+            ...empty,
+            artcc: [{
+                id: 'TMA - Upper Limit - ENCN, Kjevik',
+                segments: [{
+                    start: Position.latlon('N058.43.57.000', 'E008.34.38.000'),
+                    end: Position.latlon('N058.41.45.000', 'E008.38.44.000'),
+                    color: null
+                }, {
+                    start: Position.latlon('N058.41.45.000', 'E008.38.44.000'),
+                    end: Position.latlon('N058.28.37.000', 'E009.02.52.000'),
+                    color: null
+                }, {
+                    start: Position.latlon('N058.28.37.000', 'E009.02.52.000'),
+                    end: Position.latlon('N058.24.22.000', 'E009.10.35.000'),
+                    color: null
+                }]
+            }]
+        })
+    })
+
     it('fails on unknown sections', function() {
         expect(() => parseSct('\n\n[OoPs]\nfoo bar')).to.throw(Error, 'Error on line 3: Unknown section type "OOPS"');
     });
