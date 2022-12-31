@@ -8,11 +8,7 @@ export class Color {
     }
 
     toRGB(): readonly [number, number, number] {
-        return [
-            this.value & 0xff,
-            this.value >> 8 & 0xff,
-            this.value >> 16
-        ];
+        return [this.value & 0xff, (this.value >> 8) & 0xff, this.value >> 16];
     }
 
     static withNameAndValue(name: string, value: number): Color {

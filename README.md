@@ -1,7 +1,7 @@
 # Sector file tools
 
 Utilities for working with SCT, ASR and ESE files.
-This library can parse these files, and format them as GeoJSON data. 
+This library can parse these files, and format them as GeoJSON data.
 
 Install:
 
@@ -22,4 +22,3 @@ const geojson = toGeoJson(sct, ese, asr);
 
 console.log(geojson); // data
 ```
-

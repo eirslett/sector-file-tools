@@ -1,26 +1,17 @@
-import {isLatitude, isLongitude, Position} from "./position";
-import {ATCPosition, ESE, Freetexts} from "./ese";
+import { isLatitude, isLongitude, Position } from './position';
+import { ATCPosition, ESE, Freetexts } from './ese';
 
-const sections = [
-    'POSITIONS',
-    'SIDSSTARS',
-    'AIRSPACE',
-    'RADAR',
-    'FREETEXT',
-    'GROUND'
-] as const;
+const sections = ['POSITIONS', 'SIDSSTARS', 'AIRSPACE', 'RADAR', 'FREETEXT', 'GROUND'] as const;
 
 type CurrentSection = typeof sections[number] | null;
 
 const splitter = /:/g;
 function getParts(str: string): string[] {
-    return str.split(splitter).map(part => part.trim());
+    return str.split(splitter).map((part) => part.trim());
 }
 
 export default function parseEse(input: string): ESE {
-    const lines = input
-        .split('\n')
-        .map(line => line.trim());
+    const lines = input.split('\n').map((line) => line.trim());
 
     let currentSection: CurrentSection = null;
 
@@ -42,10 +33,14 @@ export default function parseEse(input: string): ESE {
         } else if (line.indexOf('[') === 0) {
             const nameMatch = /\[(.*)\]/.exec(line);
             if (!nameMatch || nameMatch.length !== 2) {
-                throw errorWithLine(`Syntax error, expected [***] with some section name between the brackets.`);
+                throw errorWithLine(
+                    `Syntax error, expected [***] with some section name between the brackets.`
+                );
             }
             const matchedName = nameMatch[1].toUpperCase();
-            let matched: CurrentSection | undefined = sections.find(section => matchedName === section);
+            let matched: CurrentSection | undefined = sections.find(
+                (section) => matchedName === section
+            );
             if (matched === undefined) {
                 throw errorWithLine(`Unknown section type "${matchedName}"`);
             }
@@ -60,10 +55,12 @@ export default function parseEse(input: string): ESE {
                 freetext[section].push({
                     position,
                     text,
-                    color: null
+                    color: null,
                 });
             } else {
-                throw errorWithLine(`The input ${lat} ${lon} is not a valid latitude/longitude position.`);
+                throw errorWithLine(
+                    `The input ${lat} ${lon} is not a valid latitude/longitude position.`
+                );
             }
         } else if (currentSection === 'POSITIONS') {
             const [
@@ -73,9 +70,9 @@ export default function parseEse(input: string): ESE {
                 identifier,
                 middleLetter,
                 prefix,
-                suffix,
-                , // not in use
-                , // not in use
+                suffix, // not in use // not in use
+                ,
+                ,
                 startRange,
                 endRange,
                 ...visibilityCenterCoords
@@ -83,10 +80,9 @@ export default function parseEse(input: string): ESE {
 
             const centers: Position[] = [];
             for (let i = 0; i + 1 < visibilityCenterCoords.length; i += 2) {
-                centers.push(Position.latlon(
-                    visibilityCenterCoords[i],
-                    visibilityCenterCoords[i + 1]
-                ));
+                centers.push(
+                    Position.latlon(visibilityCenterCoords[i], visibilityCenterCoords[i + 1])
+                );
             }
 
             positions.push({
@@ -99,7 +95,7 @@ export default function parseEse(input: string): ESE {
                 suffix,
                 startRange: parseInt(startRange),
                 endRange: parseInt(endRange),
-                centers
+                centers,
             });
         } else if (currentSection === 'SIDSSTARS') {
             // TODO implement
@@ -116,6 +112,6 @@ export default function parseEse(input: string): ESE {
 
     return {
         freetext,
-        positions
+        positions,
     };
 }

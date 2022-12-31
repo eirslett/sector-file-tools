@@ -1,18 +1,19 @@
-import {structuredInfo} from "./sct/info";
-import {isLatitude, isLongitude, Position} from "./position";
-import {Color} from "./color";
+import { structuredInfo } from './sct/info';
+import { isLatitude, isLongitude, Position } from './position';
+import { Color } from './color';
 import {
     Airport,
     FIX,
     Label,
     Navaid,
     NDB,
-    Polygon, Region,
+    Polygon,
+    Region,
     Runway,
     SCT,
     Segment,
-    VOR
-} from "./sct";
+    VOR,
+} from './sct';
 
 const geoTypes = [
     'ARTCC',
@@ -22,7 +23,7 @@ const geoTypes = [
     'STAR',
     'HIGH AIRWAY',
     'LOW AIRWAY',
-    'GEO'
+    'GEO',
 ] as const;
 
 const sections = [
@@ -34,7 +35,7 @@ const sections = [
     'AIRPORT',
     'RUNWAY',
     'REGIONS',
-    'LABELS'
+    'LABELS',
 ] as const;
 
 type GeoType = typeof geoTypes[number];
@@ -42,26 +43,24 @@ type CurrentSection = typeof sections[number] | null;
 
 const splitter = /[\t ]+/g;
 function getParts(str: string): string[] {
-    return str.split(splitter).map(part => part.trim());
+    return str.split(splitter).map((part) => part.trim());
 }
 
 export default function parseSct(input: string): SCT {
-    const lines = input
-        .split('\n')
-        .map(line => line.trim());
+    const lines = input.split('\n').map((line) => line.trim());
 
     const infoLines: string[] = [];
     const defines: { [key: string]: Color } = {};
     const vor: VOR[] = [];
     const ndb: NDB[] = [];
-    const navaids: { [name: string] : Navaid } = {};
+    const navaids: { [name: string]: Navaid } = {};
     const fixes: FIX[] = [];
     const airports: Airport[] = [];
     const runways: Runway[] = [];
     const labels: Label[] = [];
 
     let currentRegion: string = '';
-    const regionsByName: { [name: string] : Polygon[] } = {};
+    const regionsByName: { [name: string]: Polygon[] } = {};
 
     function isNavaid(input: string): boolean {
         return navaids[input] != null;
@@ -70,44 +69,44 @@ export default function parseSct(input: string): SCT {
     let currentSection: CurrentSection = null;
 
     interface GeoSection {
-        currentSection: string,
-        sectionsByName: { [name: string]: Segment[] }
+        currentSection: string;
+        sectionsByName: { [name: string]: Segment[] };
     }
 
-    type CurrentGeo = { [key in GeoType]: GeoSection }
+    type CurrentGeo = { [key in GeoType]: GeoSection };
 
     const currentGeo: CurrentGeo = {
-        'ARTCC': {
+        ARTCC: {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
         'ARTCC HIGH': {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
         'ARTCC LOW': {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
-        'SID': {
+        SID: {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
-        'STAR': {
+        STAR: {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
         'HIGH AIRWAY': {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
         'LOW AIRWAY': {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
-        'GEO': {
+        GEO: {
             currentSection: '',
-            sectionsByName: {}
+            sectionsByName: {},
         },
     };
 
@@ -132,14 +131,17 @@ export default function parseSct(input: string): SCT {
                 startLat: string,
                 startLon: string,
                 endLat: string,
-                endLon: string) : [Position | Navaid, Position | Navaid] {
+                endLon: string
+            ): [Position | Navaid, Position | Navaid] {
                 let start: Position | Navaid;
                 if (isLatitude(startLat) && isLongitude(startLon)) {
                     start = Position.latlon(startLat, startLon);
                 } else if (isNavaid(startLat)) {
                     start = navaids[startLat];
                 } else {
-                    throw errorWithLine(`The input ${startLat} is neither a latitude or registered navaid.`);
+                    throw errorWithLine(
+                        `The input ${startLat} is neither a latitude or registered navaid.`
+                    );
                 }
 
                 let end: Position | Navaid;
@@ -148,7 +150,9 @@ export default function parseSct(input: string): SCT {
                 } else if (isNavaid(endLat)) {
                     end = navaids[endLat];
                 } else {
-                    throw errorWithLine(`The input ${endLat} is neither a latitude or registered navaid.`);
+                    throw errorWithLine(
+                        `The input ${endLat} is neither a latitude or registered navaid.`
+                    );
                 }
                 return [start, end];
             }
@@ -189,16 +193,20 @@ export default function parseSct(input: string): SCT {
         } else if (line.indexOf('[') === 0) {
             const nameMatch = /\[(.*)\]/.exec(line);
             if (!nameMatch || nameMatch.length !== 2) {
-                throw errorWithLine(`Syntax error, expected [***] with some section name between the brackets.`);
+                throw errorWithLine(
+                    `Syntax error, expected [***] with some section name between the brackets.`
+                );
             }
             const matchedName = nameMatch[1].toUpperCase();
-            let matched: CurrentSection | undefined = sections.find(section => matchedName === section);
+            let matched: CurrentSection | undefined = sections.find(
+                (section) => matchedName === section
+            );
             if (matched === undefined) {
                 throw errorWithLine(`Unknown section type "${matchedName}"`);
             }
             currentSection = matched;
         } else if (line.indexOf('#define') === 0) {
-            const [, name, value] = line.split(/[\t ]/g).filter(el => el.length > 0);
+            const [, name, value] = line.split(/[\t ]/g).filter((el) => el.length > 0);
             const valueAsNumber = Number(value);
             if (Number.isNaN(valueAsNumber)) {
                 throw errorWithLine(`Color ${name} must be defined as a number, got '${value}'.`);
@@ -214,7 +222,7 @@ export default function parseSct(input: string): SCT {
             const data: VOR = {
                 id,
                 frequency,
-                position
+                position,
             };
             vor.push(data);
             navaids[id] = data;
@@ -225,7 +233,7 @@ export default function parseSct(input: string): SCT {
             const data = {
                 id,
                 frequency,
-                position
+                position,
             };
             ndb.push(data);
             navaids[id] = data;
@@ -235,7 +243,7 @@ export default function parseSct(input: string): SCT {
             const position = Position.navaid(id, lat, lon);
             const data = {
                 id,
-                position
+                position,
             };
             fixes.push(data);
             navaids[id] = data;
@@ -247,7 +255,7 @@ export default function parseSct(input: string): SCT {
                 id,
                 frequency,
                 position,
-                airportClass
+                airportClass,
             };
             airports.push(data);
             navaids[id] = data;
@@ -263,7 +271,7 @@ export default function parseSct(input: string): SCT {
                 endLat,
                 endLon,
                 icao,
-                airportName
+                airportName,
             ] = parts;
             const start = Position.latlon(startLat, startLon);
             const end = Position.latlon(endLat, endLon);
@@ -276,10 +284,10 @@ export default function parseSct(input: string): SCT {
                 start,
                 end,
                 icao,
-                airportName: airportName || ''
+                airportName: airportName || '',
             };
             runways.push(runway);
-        } else if (geoTypes.find(el => el === currentSection) !== undefined) {
+        } else if (geoTypes.find((el) => el === currentSection) !== undefined) {
             parseGeo(currentSection as GeoType);
         } else if (currentSection === 'REGIONS') {
             if (line.indexOf('REGIONNAME') === 0) {
@@ -287,7 +295,10 @@ export default function parseSct(input: string): SCT {
                 regionsByName[currentRegion] = regionsByName[currentRegion] || [];
             } else {
                 const parts = getParts(line);
-                const firstParts = parts.slice(0, parts.length - 2).join(' ').trim();
+                const firstParts = parts
+                    .slice(0, parts.length - 2)
+                    .join(' ')
+                    .trim();
                 const [lat, lon] = parts.slice(-2);
                 if (!isLatitude(lat)) {
                     throw errorWithLine('Expected a valid latitude, got ' + lat);
@@ -300,20 +311,25 @@ export default function parseSct(input: string): SCT {
                     // name of a color - which should also start a new polygon
                     regionsByName[currentRegion].push({
                         color: defines[firstParts.toLowerCase()],
-                        points: []
+                        points: [],
                     });
                 }
 
-                regionsByName[currentRegion][regionsByName[currentRegion].length - 1].points.push(Position.latlon(lat, lon));
+                regionsByName[currentRegion][regionsByName[currentRegion].length - 1].points.push(
+                    Position.latlon(lat, lon)
+                );
             }
         } else if (currentSection === 'LABELS') {
             const parts = getParts(line);
-            const firstParts = parts.slice(0, parts.length - 3).join(' ').trim();
+            const firstParts = parts
+                .slice(0, parts.length - 3)
+                .join(' ')
+                .trim();
             const [lat, lon, color] = parts.slice(-3);
             labels.push({
                 text: firstParts,
                 position: Position.latlon(lat, lon),
-                color: defines[color.toLowerCase()]
+                color: defines[color.toLowerCase()],
             });
         } else {
             throw errorWithLine('Unsure what this line really means');
@@ -323,12 +339,13 @@ export default function parseSct(input: string): SCT {
     function getGeoData(geoType: GeoType) {
         return Object.entries(currentGeo[geoType].sectionsByName).map(([id, segments]) => ({
             id,
-            segments
+            segments,
         }));
     }
 
     const regions: Region[] = Object.entries(regionsByName).map(([id, polygons]) => ({
-        id, polygons
+        id,
+        polygons,
     }));
 
     const data: SCT = {
@@ -348,7 +365,7 @@ export default function parseSct(input: string): SCT {
         lowAirway: getGeoData('LOW AIRWAY'),
         geo: getGeoData('GEO'),
         regions,
-        labels
+        labels,
     };
 
     return data;

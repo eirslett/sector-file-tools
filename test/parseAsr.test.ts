@@ -15,7 +15,7 @@ const empty: ASR = {
     ndbs: [],
     fixes: [],
     runways: {},
-    viewport: null
+    viewport: null,
 };
 
 describe('parse ASR', function () {
@@ -26,35 +26,37 @@ describe('parse ASR', function () {
     it('can parse sectorfile name', function () {
         expect(parseAsr('SECTORFILE:foo')).to.deep.equal({
             ...empty,
-            sectorFile: 'foo'
+            sectorFile: 'foo',
         });
     });
 
     it('can parse title', function () {
         expect(parseAsr('SECTORTITLE:bar')).to.deep.equal({
             ...empty,
-            sectorTitle: 'bar'
+            sectorTitle: 'bar',
         });
     });
 
     it('can parse ARTCC', function () {
-        expect(parseAsr('ARTCC boundary:Delegated Airspace - NORLI (ENBD -> ESOS):')).to.deep.equal({
-            ...empty,
-            artcc: ['Delegated Airspace - NORLI (ENBD -> ESOS)']
-        });
+        expect(parseAsr('ARTCC boundary:Delegated Airspace - NORLI (ENBD -> ESOS):')).to.deep.equal(
+            {
+                ...empty,
+                artcc: ['Delegated Airspace - NORLI (ENBD -> ESOS)'],
+            }
+        );
     });
 
     it('can parse ARTCC high boundary', function () {
         expect(parseAsr('ARTCC high boundary:Sector - AOR - ENBD:')).to.deep.equal({
             ...empty,
-            artccHigh: ['Sector - AOR - ENBD']
+            artccHigh: ['Sector - AOR - ENBD'],
         });
     });
 
     it('can parse ARTCC low boundary', function () {
         expect(parseAsr('ARTCC low boundary:CTR - ENDU:')).to.deep.equal({
             ...empty,
-            artccLow: ['CTR - ENDU']
+            artccLow: ['CTR - ENDU'],
         });
     });
 
@@ -62,22 +64,22 @@ describe('parse ASR', function () {
         expect(parseAsr('Free Text:ENBR Parking\\PAD 2:freetext')).to.deep.equal({
             ...empty,
             freetext: {
-                'ENBR Parking': ['PAD 2']
-            }
+                'ENBR Parking': ['PAD 2'],
+            },
         });
     });
 
     it('can parse GEO', function () {
         expect(parseAsr('Geo:ENTO Region:')).to.deep.equal({
             ...empty,
-            geo: ['ENTO Region']
+            geo: ['ENTO Region'],
         });
     });
 
     it('can parse Regions', function () {
         expect(parseAsr('Regions:ENAL:polygon')).to.deep.equal({
             ...empty,
-            regions: ['ENAL']
+            regions: ['ENAL'],
         });
     });
 
@@ -105,19 +107,21 @@ describe('parse ASR', function () {
     it('can parse FIXES', function () {
         expect(parseAsr('Fixes:TEKVA:symbol')).to.deep.equal({
             ...empty,
-            fixes: ['TEKVA']
+            fixes: ['TEKVA'],
         });
     });
 
     it('can parse runways', function () {
-        expect(parseAsr(`
+        expect(
+            parseAsr(`
 Runways:ENBR Flesland 17-35:extended centerline 1
 Runways:ENBR Flesland 17-35:extended centerline 1 left ticks
 Runways:ENBR Flesland 17-35:extended centerline 1 right ticks
 Runways:ENBR Flesland 17-35:extended centerline 2
 Runways:ENBR Flesland 17-35:extended centerline 2 left ticks
 Runways:ENBR Flesland 17-35:extended centerline 2 right ticks
-        `)).to.deep.equal({
+        `)
+        ).to.deep.equal({
             ...empty,
             runways: {
                 'ENBR Flesland 17-35': [
@@ -126,9 +130,9 @@ Runways:ENBR Flesland 17-35:extended centerline 2 right ticks
                     'extended centerline 1 right ticks',
                     'extended centerline 2',
                     'extended centerline 2 left ticks',
-                    'extended centerline 2 right ticks'
-                ]
-            }
+                    'extended centerline 2 right ticks',
+                ],
+            },
         });
     });
 
@@ -136,9 +140,9 @@ Runways:ENBR Flesland 17-35:extended centerline 2 right ticks
         expect(parseAsr('WINDOWAREA:60.168790:11.004299:60.225587:11.197037')).to.deep.equal({
             ...empty,
             viewport: [
-                Position.latlonFloat(60.168790, 11.004299),
+                Position.latlonFloat(60.16879, 11.004299),
                 Position.latlonFloat(60.225587, 11.197037),
-            ]
+            ],
         });
     });
 });

@@ -1,14 +1,14 @@
-import {Position} from "../position";
+import { Position } from '../position';
 
 export type Info = {
-    sectorFilename?: string
-    defaultCallsign?: string
-    defaultAirport?: string
-    center?: Position
-    nmPerLatDegree?: number
-    nmPerLonDegree?: number
-    magneticVariation?: number
-    sectorScale?: number
+    sectorFilename?: string;
+    defaultCallsign?: string;
+    defaultAirport?: string;
+    center?: Position;
+    nmPerLatDegree?: number;
+    nmPerLonDegree?: number;
+    magneticVariation?: number;
+    sectorScale?: number;
 };
 
 export function structuredInfo(lines: string[]): Info {
@@ -23,7 +23,7 @@ export function structuredInfo(lines: string[]): Info {
         nmPerLatDegree,
         nmPerLonDegree,
         magneticVariation,
-        sectorScale
+        sectorScale,
     ] = lines;
 
     if (sectorFilename !== undefined) {

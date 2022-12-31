@@ -1,6 +1,6 @@
-import chai, {expect} from "chai";
-import chaiAlmost from "chai-almost";
-import {Position} from "../src";
+import chai, { expect } from 'chai';
+import chaiAlmost from 'chai-almost';
+import { Position } from '../src';
 
 chai.use(chaiAlmost());
 
@@ -14,7 +14,6 @@ describe('Position', function () {
     });
 
     it('convert to UTM', function () {
-        expect(Position.latlon('N000.00.00.000', 'E000.00.00.000').toUTM())
-            .to.almost.eql([0, 0]);
-    })
+        expect(Position.latlon('N000.00.00.000', 'E000.00.00.000').toUTM()).to.almost.eql([0, 0]);
+    });
 });

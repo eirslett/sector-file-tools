@@ -1,4 +1,6 @@
-type InternalData = { type: 'latlon', lat: string, lon: string } | { type: 'latlonFloat', lat: number, lon: number }
+type InternalData =
+    | { type: 'latlon'; lat: string; lon: string }
+    | { type: 'latlonFloat'; lat: number; lon: number };
 
 export class Position {
     private readonly internalData: InternalData;
@@ -24,10 +26,7 @@ export class Position {
     }
 
     toUTM(): [number, number] {
-        return toUtm([
-            this.lonFloat,
-            this.latFloat
-        ]);
+        return toUtm([this.lonFloat, this.latFloat]);
     }
 
     static latlon(lat: string, lon: string): Position {
@@ -56,12 +55,7 @@ export function isLongitude(input: string): boolean {
 function latitudeToDecimal(lat: string): number {
     if (!lat) throw new Error('Invalid latitude (empty)');
     const direction = lat[0].toUpperCase() === 'N' ? 1 : -1;
-    const [
-        degrees,
-        minutes,
-        secondsOptional,
-        decimalsOptional
-    ] = lat.substr(1).split('.');
+    const [degrees, minutes, secondsOptional, decimalsOptional] = lat.substr(1).split('.');
 
     const seconds = secondsOptional || '0';
     const decimals = decimalsOptional || '0';
@@ -70,11 +64,9 @@ function latitudeToDecimal(lat: string): number {
     if (Number.isNaN(parseInt(seconds))) throw new Error(`Invalid latitude ${lat}`);
     if (Number.isNaN(parseInt(decimals))) throw new Error(`Invalid latitude ${lat}`);
 
-    const result = direction * (
-        parseInt(degrees) +
-        (parseInt(minutes) / 60) +
-        (parseFloat(`${seconds}.${decimals}`) / 3600)
-    );
+    const result =
+        direction *
+        (parseInt(degrees) + parseInt(minutes) / 60 + parseFloat(`${seconds}.${decimals}`) / 3600);
 
     if (Number.isNaN(result)) {
         throw new Error(`Invalid latitude ${lat}`);
@@ -88,12 +80,7 @@ function longitudeToDecimal(lon: string): number {
         throw new Error('Invalid longitude (empty)');
     }
     const direction = lon[0].toUpperCase() === 'E' ? 1 : -1;
-    const [
-        degrees,
-        minutes,
-        secondsOptional,
-        decimalsOptional
-    ] = lon.substr(1).split('.');
+    const [degrees, minutes, secondsOptional, decimalsOptional] = lon.substr(1).split('.');
 
     const seconds = secondsOptional || '0';
     const decimals = decimalsOptional || '0';
@@ -102,11 +89,9 @@ function longitudeToDecimal(lon: string): number {
     if (Number.isNaN(parseInt(seconds))) throw new Error(`Invalid longitude ${lon}`);
     if (Number.isNaN(parseInt(decimals))) throw new Error(`Invalid longitude ${lon}`);
 
-    const result = direction * (
-        parseInt(degrees) +
-        (parseInt(minutes) / 60) +
-        (parseFloat(`${seconds}.${decimals}`) / 3600)
-    );
+    const result =
+        direction *
+        (parseInt(degrees) + parseInt(minutes) / 60 + parseFloat(`${seconds}.${decimals}`) / 3600);
 
     if (Number.isNaN(result)) {
         throw new Error(`Invalid longitude ${lon}`);
@@ -123,9 +108,8 @@ function toUtm(input: readonly [number, number]): [number, number] {
 
     const halfSize = HALF_SIZE;
     for (let i = 0; i < length; i += dimension) {
-        output[i] = halfSize * input[i] / 180;
-        let y = RADIUS *
-            Math.log(Math.tan(Math.PI * (input[i + 1] + 90) / 360));
+        output[i] = (halfSize * input[i]) / 180;
+        let y = RADIUS * Math.log(Math.tan((Math.PI * (input[i + 1] + 90)) / 360));
         if (y > halfSize) {
             y = halfSize;
         } else if (y < -halfSize) {

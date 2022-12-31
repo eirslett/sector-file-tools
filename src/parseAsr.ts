@@ -1,5 +1,5 @@
-import {ASR, Freetext, Runways} from "./asr";
-import {Position} from "./position";
+import { ASR, Freetext, Runways } from './asr';
+import { Position } from './position';
 
 export default function parseAsr(input: string): ASR {
     let sectorTitle = '';
@@ -19,9 +19,9 @@ export default function parseAsr(input: string): ASR {
 
     input
         .split('\n')
-        .map(str => str.trim().split(':'))
-        .filter(parts => parts.length > 0)
-        .forEach(parts => {
+        .map((str) => str.trim().split(':'))
+        .filter((parts) => parts.length > 0)
+        .forEach((parts) => {
             const [key, ...rest] = parts;
             if (key === 'SECTORFILE') {
                 sectorFile = rest[0];
@@ -50,7 +50,7 @@ export default function parseAsr(input: string): ASR {
             } else if (key === 'WINDOWAREA') {
                 viewport = [
                     Position.latlonFloat(parseFloat(rest[0]), parseFloat(rest[1])),
-                    Position.latlonFloat(parseFloat(rest[2]), parseFloat(rest[3]))
+                    Position.latlonFloat(parseFloat(rest[2]), parseFloat(rest[3])),
                 ];
             }
         });
@@ -68,6 +68,6 @@ export default function parseAsr(input: string): ASR {
         ndbs,
         fixes,
         runways,
-        viewport
+        viewport,
     };
 }
