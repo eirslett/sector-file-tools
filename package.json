@@ -2,8 +2,9 @@
     "name": "sector-file-tools",
     "version": "0.0.2",
     "description": "Utilities for working with SCT, ASR and ESE files.",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/src/index.js",
+    "type": "module",
+    "types": "dist/src/index.d.ts",
     "scripts": {
         "test": "mocha -r ts-node/register test/**/*.test.ts",
         "build": "tsc",
