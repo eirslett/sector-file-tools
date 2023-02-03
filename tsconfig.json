@@ -4,6 +4,7 @@
         "target": "es2020",
         "strict": true,
         "noImplicitAny": true,
+        "module": "ESNext",
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",

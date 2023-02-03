@@ -6,7 +6,7 @@
     "type": "module",
     "types": "dist/src/index.d.ts",
     "scripts": {
-        "test": "mocha -r ts-node/register test/**/*.test.ts",
+        "test": "mocha",
         "build": "tsc",
         "lint": "prettier --check .",
         "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
