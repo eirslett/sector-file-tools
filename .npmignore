@@ -1,9 +1,12 @@
 .idea
 .nyc_output
+.editorconfig
 coverage
-dist
+src
 node_modules
 test
 tmp
 tsconfig.json
 *.iml
+.mocharc.json
+.prettierignore
