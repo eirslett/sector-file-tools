@@ -1,5 +1,5 @@
-import { isLatitude, isLongitude, Position } from './position';
-import { ATCPosition, ESE, Freetexts } from './ese';
+import { isLatitude, isLongitude, Position } from './position.js';
+import { ATCPosition, ESE, Freetexts } from './ese.js';
 
 const sections = ['POSITIONS', 'SIDSSTARS', 'AIRSPACE', 'RADAR', 'FREETEXT', 'GROUND'] as const;
 

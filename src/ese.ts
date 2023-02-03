@@ -1,5 +1,5 @@
-import { Position } from './position';
-import { Label } from './sct';
+import { Position } from './position.js';
+import { Label } from './sct.js';
 
 export interface ATCPosition {
     name: string;

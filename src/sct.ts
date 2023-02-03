@@ -1,6 +1,6 @@
-import { Position } from './position';
-import { Color } from './color';
-import { Info } from './sct/info';
+import { Position } from './position.js';
+import { Color } from './color.js';
+import { Info } from './sct/info.js';
 
 export interface Navaid {
     id: string;

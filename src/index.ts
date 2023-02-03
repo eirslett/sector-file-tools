@@ -1,12 +1,12 @@
-export { SCT } from './sct';
-export { ASR } from './asr';
-export { ESE } from './ese';
+export { SCT } from './sct.js';
+export { ASR } from './asr.js';
+export { ESE } from './ese.js';
 
-export { default as parseSct } from './parseSct';
-export { default as parseAsr } from './parseAsr';
-export { default as parseEse } from './parseEse';
+export { default as parseSct } from './parseSct.js';
+export { default as parseAsr } from './parseAsr.js';
+export { default as parseEse } from './parseEse.js';
 
-export { Position } from './position';
-export { Color } from './color';
+export { Position } from './position.js';
+export { Color } from './color.js';
 
-export { toGeoJson } from './geojson';
+export { toGeoJson } from './geojson.js';

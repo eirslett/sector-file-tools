@@ -1,4 +1,4 @@
-import type { Position } from './position';
+import type { Position } from './position.js';
 
 export type Freetext = { [section: string]: string[] };
 export type Runways = { [runway: string]: string[] };

@@ -1,8 +1,8 @@
-import { Position } from './position';
-import { Airport, FIX, Geo, Label, Navaid, NDB, Region, Runway, SCT, VOR } from './sct';
-import { Feature, FeatureCollection } from 'geojson';
-import { ASR } from './asr';
-import { ESE } from './ese';
+import { Position } from './position.js';
+import { Airport, FIX, Geo, Label, Navaid, NDB, Region, Runway, SCT, VOR } from './sct.js';
+import type { Feature, FeatureCollection } from 'geojson';
+import { ASR } from './asr.js';
+import { ESE } from './ese.js';
 
 function regionToGeo(region: Region): Feature<any>[] {
     return region.polygons.map((polygon) => ({

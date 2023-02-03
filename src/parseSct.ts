@@ -1,6 +1,6 @@
-import { structuredInfo } from './sct/info';
-import { isLatitude, isLongitude, Position } from './position';
-import { Color } from './color';
+import { structuredInfo } from './sct/info.js';
+import { isLatitude, isLongitude, Position } from './position.js';
+import { Color } from './color.js';
 import {
     Airport,
     FIX,

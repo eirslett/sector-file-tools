@@ -1,5 +1,5 @@
-import { ASR, Freetext, Runways } from './asr';
-import { Position } from './position';
+import { ASR, Freetext, Runways } from './asr.js';
+import { Position } from './position.js';
 
 export default function parseAsr(input: string): ASR {
     let sectorTitle = '';
