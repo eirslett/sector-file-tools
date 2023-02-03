@@ -38,8 +38,8 @@ const sections = [
     'LABELS',
 ] as const;
 
-type GeoType = typeof geoTypes[number];
-type CurrentSection = typeof sections[number] | null;
+type GeoType = (typeof geoTypes)[number];
+type CurrentSection = (typeof sections)[number] | null;
 
 const splitter = /[\t ]+/g;
 function getParts(str: string): string[] {

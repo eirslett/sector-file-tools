@@ -3,7 +3,7 @@ import { ATCPosition, ESE, Freetexts } from './ese';
 
 const sections = ['POSITIONS', 'SIDSSTARS', 'AIRSPACE', 'RADAR', 'FREETEXT', 'GROUND'] as const;
 
-type CurrentSection = typeof sections[number] | null;
+type CurrentSection = (typeof sections)[number] | null;
 
 const splitter = /:/g;
 function getParts(str: string): string[] {
