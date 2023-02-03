@@ -1,6 +1,6 @@
 {
     "name": "sector-file-tools",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Utilities for working with SCT, ASR and ESE files.",
     "main": "dist/src/index.js",
     "type": "module",
