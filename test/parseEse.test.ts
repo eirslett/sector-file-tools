@@ -23,7 +23,7 @@ describe('parse ESE', function () {
         expect(
             parseEse(`
 [FREETEXT]
-N062.33.29.800:E006.06.41.540:ENAL Parking:10
+N062.33.29.800:E006.06.41.540:ENAL Parking:10  ; test comment
 N062.33.30.490:E006.06.44.700:ENAL Parking:11
 N062.33.42.900:E006.07.13.408:ENAL Taxiways:A
         `)
@@ -57,7 +57,7 @@ N062.33.42.900:E006.07.13.408:ENAL Taxiways:A
         expect(
             parseEse(`
 [POSITIONS]
-ENZV_APP:Sola Approach:119.600:ZAR::ENZV:APP:::1001:7477:N058.52.36.000:E005.38.16.000
+ENZV_APP:Sola Approach:119.600:ZAR::ENZV:APP:::1001:7477:N058.52.36.000:E005.38.16.000  ; test comment
        `)
         ).to.eql({
             ...empty,
