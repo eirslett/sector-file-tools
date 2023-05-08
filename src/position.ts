@@ -29,6 +29,10 @@ export class Position {
         return toUtm([this.lonFloat, this.latFloat]);
     }
 
+    toWGS84(): [number, number] {
+        return [this.lonFloat, this.latFloat];
+    }
+
     static latlon(lat: string, lon: string): Position {
         return new Position({ type: 'latlon', lat, lon });
     }
