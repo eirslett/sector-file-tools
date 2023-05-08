@@ -7,7 +7,7 @@ type CurrentSection = (typeof sections)[number] | null;
 
 const splitter = /:/g;
 function getParts(str: string): string[] {
-    return str.split(splitter).map((part) => part.trim());
+    return str.split(';')[0].trim().split(splitter).map((part) => part.trim());
 }
 
 export default function parseEse(input: string): ESE {
@@ -76,7 +76,7 @@ export default function parseEse(input: string): ESE {
                 startRange,
                 endRange,
                 ...visibilityCenterCoords
-            ] = line.split(':');
+            ] = line.split(';')[0].trim().split(':');
 
             const centers: Position[] = [];
             for (let i = 0; i + 1 < visibilityCenterCoords.length; i += 2) {

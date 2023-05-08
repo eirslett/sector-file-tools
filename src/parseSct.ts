@@ -43,7 +43,7 @@ type CurrentSection = (typeof sections)[number] | null;
 
 const splitter = /[\t ]+/g;
 function getParts(str: string): string[] {
-    return str.split(splitter).map((part) => part.trim());
+    return str.split(';')[0].trim().split(splitter).map((part) => part.trim());
 }
 
 export default function parseSct(input: string): SCT {
