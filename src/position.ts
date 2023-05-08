@@ -29,9 +29,17 @@ export class Position {
         return toUtm([this.lonFloat, this.latFloat]);
     }
 
+    // Convers to decimal degrees WGS84 with a precision of 6 decimals
+    // This gives a real world precision of about 10cm
     toWGS84(): [number, number] {
-        return [this.lonFloat, this.latFloat];
+        return [this.reduceDecimalPrecision(this.lonFloat), 
+                this.reduceDecimalPrecision(this.latFloat)];
     }
+
+    reduceDecimalPrecision(decimal: number) : number {
+        let pow = Math.pow(10, 6); // Base 10, 6 decimals precision
+        return Math.round(decimal*pow) / pow;
+    }  
 
     static latlon(lat: string, lon: string): Position {
         return new Position({ type: 'latlon', lat, lon });
