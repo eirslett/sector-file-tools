@@ -16,4 +16,8 @@ describe('Position', function () {
     it('convert to UTM', function () {
         expect(Position.latlon('N000.00.00.000', 'E000.00.00.000').toUTM()).to.almost.eql([0, 0]);
     });
+
+    it('convert to WGS84', function () {
+        expect(Position.latlon('N000.00.00.000', 'E000.00.00.000').toWGS84()).to.eql([0.0, 0.0]);
+    });
 });

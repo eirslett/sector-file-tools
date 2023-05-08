@@ -4,12 +4,14 @@ import type { Feature, FeatureCollection } from 'geojson';
 import { ASR } from './asr.js';
 import { ESE } from './ese.js';
 
-function regionToGeo(region: Region): Feature<any>[] {
+function regionToGeo(region: Region, utm_coord: boolean | true): Feature<any>[] {
     return region.polygons.map((polygon) => ({
         type: 'Feature',
         geometry: {
             type: 'Polygon',
-            coordinates: [polygon.points.map((point) => point.toUTM())],
+            coordinates: utm_coord ?
+                [polygon.points.map((point) => point.toUTM())] : // utm_coord is true
+                [polygon.points.map((point) => point.toWGS84())], // utm_coord is false
         },
         properties: {
             type: 'region',
@@ -27,12 +29,22 @@ function toUtm(point: Position | Navaid): [number, number] {
     }
 }
 
-function geoToGeo(geo: Geo): Feature[] {
+function toWGS84(point: Position | Navaid): [number, number] {
+    if ((point as any).position != undefined) {
+        return (point as Navaid).position.toWGS84();
+    } else {
+        return (point as Position).toWGS84();
+    }
+}
+
+function geoToGeo(geo: Geo, utm_coord: boolean | true): Feature[] {
     return geo.segments.map((segment) => ({
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: [toUtm(segment.start), toUtm(segment.end)],
+            coordinates: utm_coord ?
+                [toUtm(segment.start), toUtm(segment.end)] : // utm_coord is true
+                [toWGS84(segment.start), toWGS84(segment.end)], // utm_coord is false
         },
         properties: {
             type: 'geo',
@@ -42,12 +54,14 @@ function geoToGeo(geo: Geo): Feature[] {
     }));
 }
 
-function airportToGeo(airport: Airport): Feature {
+function airportToGeo(airport: Airport, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: airport.position.toUTM(),
+            coordinates: utm_coord ?
+                airport.position.toUTM() : // utm_coord is true
+                airport.position.toWGS84(), // utm_coord is false
         },
         properties: {
             name: airport.id,
@@ -56,12 +70,14 @@ function airportToGeo(airport: Airport): Feature {
     };
 }
 
-function vorToGeo(vor: VOR): Feature {
+function vorToGeo(vor: VOR, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: vor.position.toUTM(),
+            coordinates: utm_coord ?
+                vor.position.toUTM() : // utm_coord is true
+                vor.position.toWGS84(), // utm_coord is false
         },
         properties: {
             name: vor.id,
@@ -71,12 +87,14 @@ function vorToGeo(vor: VOR): Feature {
     };
 }
 
-function ndbToGeo(ndb: NDB): Feature {
+function ndbToGeo(ndb: NDB, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: ndb.position.toUTM(),
+            coordinates: utm_coord ?
+                ndb.position.toUTM() : // utm_coord is true
+                ndb.position.toWGS84(), // utm_coord is false
         },
         properties: {
             name: ndb.id,
@@ -86,12 +104,14 @@ function ndbToGeo(ndb: NDB): Feature {
     };
 }
 
-function fixToGeo(fix: FIX): Feature {
+function fixToGeo(fix: FIX, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: fix.position.toUTM(),
+            coordinates: utm_coord ?
+                fix.position.toUTM() : // utm_coord is true
+                fix.position.toWGS84(), // utm_coord is false
         },
         properties: {
             name: fix.id,
@@ -100,12 +120,14 @@ function fixToGeo(fix: FIX): Feature {
     };
 }
 
-function labelToGeo(label: Label): Feature {
+function labelToGeo(label: Label, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: label.position.toUTM(),
+            coordinates: utm_coord ?
+                label.position.toUTM() : // utm_coord is true
+                label.position.toWGS84(), // utm_coord is false
         },
         properties: {
             value: label.text,
@@ -114,12 +136,14 @@ function labelToGeo(label: Label): Feature {
     };
 }
 
-function freetextToGeo(section: string, label: Label): Feature {
+function freetextToGeo(section: string, label: Label, utm_coord: boolean | true): Feature {
     return {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: label.position.toUTM(),
+            coordinates: utm_coord ?
+                label.position.toUTM() : // utm_coord is true
+                label.position.toWGS84(), // utm_coord is false
         },
         properties: {
             section,
@@ -129,14 +153,16 @@ function freetextToGeo(section: string, label: Label): Feature {
     };
 }
 
-function runwayToGeo(runway: Runway): Feature {
+function runwayToGeo(runway: Runway, utm_coord: boolean | true): Feature {
     const id = `${runway.icao}: ${runway.id}`;
     return {
         id,
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: [runway.start.toUTM(), runway.end.toUTM()],
+            coordinates: utm_coord ?
+                [runway.start.toUTM(), runway.end.toUTM()] : // utm_coord is true
+                [runway.start.toWGS84(), runway.end.toWGS84()], // utm_coord is false
         },
         properties: {
             name: runway.id,
@@ -148,12 +174,14 @@ function runwayToGeo(runway: Runway): Feature {
     };
 }
 
-function sidToGeo(sid: Geo): Feature[] {
+function sidToGeo(sid: Geo, utm_coord: boolean | true): Feature[] {
     return sid.segments.map((segment) => ({
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: [toUtm(segment.start), toUtm(segment.end)],
+            coordinates: utm_coord ?
+                [toUtm(segment.start), toUtm(segment.end)] : // utm_coord is true
+                [toWGS84(segment.start), toWGS84(segment.end)], // utm_coord is false
         },
         properties: {
             type: 'sid',
@@ -163,12 +191,14 @@ function sidToGeo(sid: Geo): Feature[] {
     }));
 }
 
-function starToGeo(star: Geo): Feature[] {
+function starToGeo(star: Geo, utm_coord: boolean | true): Feature[] {
     return star.segments.map((segment) => ({
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: [toUtm(segment.start), toUtm(segment.end)],
+            coordinates: utm_coord ?
+                [toUtm(segment.start), toUtm(segment.end)] : // utm_coord is true
+                [toWGS84(segment.start), toWGS84(segment.end)], // utm_coord is false
         },
         properties: {
             type: 'star',
@@ -182,17 +212,17 @@ function flatten<T>(arr: T[][]): T[] {
     return ([] as T[]).concat(...arr);
 }
 
-export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null): FeatureCollection {
+export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null, utm_coord: boolean | true): FeatureCollection {
     const features: Feature[] = flatten([
         flatten(
             sct.regions
                 .filter((region) => (asr != null ? asr.regions.includes(region.id) : true))
-                .map(regionToGeo)
+                .map(element => regionToGeo(element, utm_coord))
         ),
         flatten(
-            sct.geo.filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true)).map(geoToGeo)
+            sct.geo.filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true)).map(element => geoToGeo(element, utm_coord))
         ),
-        sct.airports.map(airportToGeo),
+        sct.airports.map(element => airportToGeo(element, utm_coord)),
         sct.runways
             .filter((runway) => {
                 if (asr == null) {
@@ -201,17 +231,17 @@ export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null): FeatureCollectio
                 const fullName = `${runway.icao} ${runway.airportName} ${runway.id}-${runway.oppositeId}`;
                 return Object.keys(asr.runways).includes(fullName);
             })
-            .map(runwayToGeo),
-        sct.vor.filter((vor) => (asr != null ? asr.vors.includes(vor.id) : true)).map(vorToGeo),
-        sct.ndb.filter((ndb) => (asr != null ? asr.ndbs.includes(ndb.id) : true)).map(ndbToGeo),
-        sct.fixes.filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true)).map(fixToGeo),
-        flatten(sct.sid.map(sidToGeo)),
+            .map(element => runwayToGeo(element, utm_coord)),
+        sct.vor.filter((vor) => (asr != null ? asr.vors.includes(vor.id) : true)).map(element => vorToGeo(element, utm_coord)),
+        sct.ndb.filter((ndb) => (asr != null ? asr.ndbs.includes(ndb.id) : true)).map(element => ndbToGeo(element, utm_coord)),
+        sct.fixes.filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true)).map(element => fixToGeo(element, utm_coord)),
+        flatten(sct.sid.map(element => sidToGeo(element, utm_coord))),
         flatten(
             sct.star
                 .filter((star) => (asr != null ? asr.stars.includes(star.id) : true))
-                .map(starToGeo)
+                .map(element => starToGeo(element, utm_coord))
         ),
-        sct.labels.map(labelToGeo),
+        sct.labels.map(element => labelToGeo(element, utm_coord)),
         flatten(
             Object.entries(ese.freetext).map(([section, labels]) =>
                 labels
@@ -221,7 +251,7 @@ export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null): FeatureCollectio
                               asr.freetext[section].includes(label.text)
                             : true
                     )
-                    .map((label) => freetextToGeo(section, label))
+                    .map((label) => freetextToGeo(section, label, utm_coord))
             )
         ),
     ]);
