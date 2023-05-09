@@ -80,7 +80,9 @@ E011.05.02.000
     });
 
     it('read VOR', function () {
-        expect(parseSct('[VOR]\nAAL  116.700 N057.06.14.158 E009.59.34.108 ; test comment')).to.deep.equal({
+        expect(
+            parseSct('[VOR]\nAAL  116.700 N057.06.14.158 E009.59.34.108 ; test comment')
+        ).to.deep.equal({
             ...empty,
             vor: [
                 {
@@ -93,7 +95,9 @@ E011.05.02.000
     });
 
     it('read NDB', function () {
-        expect(parseSct('[NDB]\nHEI  340.000 N065.19.32.008 E007.18.57.088 ; test comment')).to.deep.equal({
+        expect(
+            parseSct('[NDB]\nHEI  340.000 N065.19.32.008 E007.18.57.088 ; test comment')
+        ).to.deep.equal({
             ...empty,
             ndb: [
                 {
@@ -106,7 +110,9 @@ E011.05.02.000
     });
 
     it('read FIXes', function () {
-        expect(parseSct('[FIXES]\n02RYG N059.21.23.579 E010.52.14.581 ; test comment')).to.deep.equal({
+        expect(
+            parseSct('[FIXES]\n02RYG N059.21.23.579 E010.52.14.581 ; test comment')
+        ).to.deep.equal({
             ...empty,
             fixes: [
                 {
@@ -118,7 +124,9 @@ E011.05.02.000
     });
 
     it('read AIRPORTs', function () {
-        expect(parseSct('[AIRPORT]\nENGM 123.456 N060.12.10.000 E011.05.02.000 D ; test comment')).to.deep.equal({
+        expect(
+            parseSct('[AIRPORT]\nENGM 123.456 N060.12.10.000 E011.05.02.000 D ; test comment')
+        ).to.deep.equal({
             ...empty,
             airports: [
                 {

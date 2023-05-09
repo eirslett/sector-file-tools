@@ -11,9 +11,10 @@ function regionToGeo(region: Region, system: CoordinateSystem = 'UTM'): Feature<
         type: 'Feature',
         geometry: {
             type: 'Polygon',
-            coordinates: system === 'UTM' ?
-                [polygon.points.map((point) => point.toUTM())] : // Coordinate system is UTM
-                [polygon.points.map((point) => point.toWGS84())], // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? [polygon.points.map((point) => point.toUTM())] // Coordinate system is UTM
+                    : [polygon.points.map((point) => point.toWGS84())], // Coordinate system is WGS84
         },
         properties: {
             type: 'region',
@@ -44,9 +45,10 @@ function geoToGeo(geo: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: system === 'UTM' ?
-                [toUtm(segment.start), toUtm(segment.end)] : // Coordinate system is UTM
-                [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? [toUtm(segment.start), toUtm(segment.end)] // Coordinate system is UTM
+                    : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
         },
         properties: {
             type: 'geo',
@@ -61,9 +63,10 @@ function airportToGeo(airport: Airport, system: CoordinateSystem = 'UTM'): Featu
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                airport.position.toUTM() : // Coordinate system is UTM
-                airport.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? airport.position.toUTM() // Coordinate system is UTM
+                    : airport.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             name: airport.id,
@@ -77,9 +80,10 @@ function vorToGeo(vor: VOR, system: CoordinateSystem = 'UTM'): Feature {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                vor.position.toUTM() : // Coordinate system is UTM
-                vor.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? vor.position.toUTM() // Coordinate system is UTM
+                    : vor.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             name: vor.id,
@@ -94,9 +98,10 @@ function ndbToGeo(ndb: NDB, system: CoordinateSystem = 'UTM'): Feature {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                ndb.position.toUTM() : // Coordinate system is UTM
-                ndb.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? ndb.position.toUTM() // Coordinate system is UTM
+                    : ndb.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             name: ndb.id,
@@ -111,9 +116,10 @@ function fixToGeo(fix: FIX, system: CoordinateSystem = 'UTM'): Feature {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                fix.position.toUTM() : // Coordinate system is UTM
-                fix.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? fix.position.toUTM() // Coordinate system is UTM
+                    : fix.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             name: fix.id,
@@ -127,9 +133,10 @@ function labelToGeo(label: Label, system: CoordinateSystem = 'UTM'): Feature {
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                label.position.toUTM() : // Coordinate system is UTM
-                label.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? label.position.toUTM() // Coordinate system is UTM
+                    : label.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             value: label.text,
@@ -143,9 +150,10 @@ function freetextToGeo(section: string, label: Label, system: CoordinateSystem =
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: system === 'UTM' ?
-                label.position.toUTM() : // Coordinate system is UTM
-                label.position.toWGS84(), // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? label.position.toUTM() // Coordinate system is UTM
+                    : label.position.toWGS84(), // Coordinate system is WGS84
         },
         properties: {
             section,
@@ -162,9 +170,10 @@ function runwayToGeo(runway: Runway, system: CoordinateSystem = 'UTM'): Feature 
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: system === 'UTM' ?
-                [runway.start.toUTM(), runway.end.toUTM()] : // Coordinate system is UTM
-                [runway.start.toWGS84(), runway.end.toWGS84()], // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? [runway.start.toUTM(), runway.end.toUTM()] // Coordinate system is UTM
+                    : [runway.start.toWGS84(), runway.end.toWGS84()], // Coordinate system is WGS84
         },
         properties: {
             name: runway.id,
@@ -181,9 +190,10 @@ function sidToGeo(sid: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: system === 'UTM' ?
-                [toUtm(segment.start), toUtm(segment.end)] : // Coordinate system is UTM
-                [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? [toUtm(segment.start), toUtm(segment.end)] // Coordinate system is UTM
+                    : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
         },
         properties: {
             type: 'sid',
@@ -198,9 +208,10 @@ function starToGeo(star: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
         type: 'Feature',
         geometry: {
             type: 'LineString',
-            coordinates: system === 'UTM' ?
-                [toUtm(segment.start), toUtm(segment.end)] : // Coordinate system is UTM
-                [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
+            coordinates:
+                system === 'UTM'
+                    ? [toUtm(segment.start), toUtm(segment.end)] // Coordinate system is UTM
+                    : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
         },
         properties: {
             type: 'star',
@@ -214,17 +225,24 @@ function flatten<T>(arr: T[][]): T[] {
     return ([] as T[]).concat(...arr);
 }
 
-export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null, system: CoordinateSystem = 'UTM'): FeatureCollection {
+export function toGeoJson(
+    sct: SCT,
+    ese: ESE,
+    asr: ASR | null,
+    system: CoordinateSystem = 'UTM'
+): FeatureCollection {
     const features: Feature[] = flatten([
         flatten(
             sct.regions
                 .filter((region) => (asr != null ? asr.regions.includes(region.id) : true))
-                .map(element => regionToGeo(element, system))
+                .map((element) => regionToGeo(element, system))
         ),
         flatten(
-            sct.geo.filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true)).map(element => geoToGeo(element, system))
+            sct.geo
+                .filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true))
+                .map((element) => geoToGeo(element, system))
         ),
-        sct.airports.map(element => airportToGeo(element, system)),
+        sct.airports.map((element) => airportToGeo(element, system)),
         sct.runways
             .filter((runway) => {
                 if (asr == null) {
@@ -233,17 +251,23 @@ export function toGeoJson(sct: SCT, ese: ESE, asr: ASR | null, system: Coordinat
                 const fullName = `${runway.icao} ${runway.airportName} ${runway.id}-${runway.oppositeId}`;
                 return Object.keys(asr.runways).includes(fullName);
             })
-            .map(element => runwayToGeo(element, system)),
-        sct.vor.filter((vor) => (asr != null ? asr.vors.includes(vor.id) : true)).map(element => vorToGeo(element, system)),
-        sct.ndb.filter((ndb) => (asr != null ? asr.ndbs.includes(ndb.id) : true)).map(element => ndbToGeo(element, system)),
-        sct.fixes.filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true)).map(element => fixToGeo(element, system)),
-        flatten(sct.sid.map(element => sidToGeo(element, system))),
+            .map((element) => runwayToGeo(element, system)),
+        sct.vor
+            .filter((vor) => (asr != null ? asr.vors.includes(vor.id) : true))
+            .map((element) => vorToGeo(element, system)),
+        sct.ndb
+            .filter((ndb) => (asr != null ? asr.ndbs.includes(ndb.id) : true))
+            .map((element) => ndbToGeo(element, system)),
+        sct.fixes
+            .filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true))
+            .map((element) => fixToGeo(element, system)),
+        flatten(sct.sid.map((element) => sidToGeo(element, system))),
         flatten(
             sct.star
                 .filter((star) => (asr != null ? asr.stars.includes(star.id) : true))
-                .map(element => starToGeo(element, system))
+                .map((element) => starToGeo(element, system))
         ),
-        sct.labels.map(element => labelToGeo(element, system)),
+        sct.labels.map((element) => labelToGeo(element, system)),
         flatten(
             Object.entries(ese.freetext).map(([section, labels]) =>
                 labels
