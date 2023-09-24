@@ -40,7 +40,7 @@ function toWGS84(point: Position | Navaid): [number, number] {
     }
 }
 
-function geoToGeo(geo: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
+function geoToGeo(geo: Geo, type: string, system: CoordinateSystem = 'UTM'): Feature[] {
     return geo.segments.map((segment) => ({
         type: 'Feature',
         geometry: {
@@ -51,7 +51,7 @@ function geoToGeo(geo: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
                     : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
         },
         properties: {
-            type: 'geo',
+            type: type,
             section: geo.id,
             color: segment.color?.toRGB(),
         },
@@ -185,42 +185,6 @@ function runwayToGeo(runway: Runway, system: CoordinateSystem = 'UTM'): Feature 
     };
 }
 
-function sidToGeo(sid: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
-    return sid.segments.map((segment) => ({
-        type: 'Feature',
-        geometry: {
-            type: 'LineString',
-            coordinates:
-                system === 'UTM'
-                    ? [toUtm(segment.start), toUtm(segment.end)] // Coordinate system is UTM
-                    : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
-        },
-        properties: {
-            type: 'sid',
-            section: sid.id,
-            color: segment.color?.toRGB(),
-        },
-    }));
-}
-
-function starToGeo(star: Geo, system: CoordinateSystem = 'UTM'): Feature[] {
-    return star.segments.map((segment) => ({
-        type: 'Feature',
-        geometry: {
-            type: 'LineString',
-            coordinates:
-                system === 'UTM'
-                    ? [toUtm(segment.start), toUtm(segment.end)] // Coordinate system is UTM
-                    : [toWGS84(segment.start), toWGS84(segment.end)], // Coordinate system is WGS84
-        },
-        properties: {
-            type: 'star',
-            section: star.id,
-            color: segment.color?.toRGB(),
-        },
-    }));
-}
-
 function flatten<T>(arr: T[][]): T[] {
     return ([] as T[]).concat(...arr);
 }
@@ -232,16 +196,12 @@ export function toGeoJson(
     system: CoordinateSystem = 'UTM'
 ): FeatureCollection {
     const features: Feature[] = flatten([
-        flatten(
-            sct.regions
-                .filter((region) => (asr != null ? asr.regions.includes(region.id) : true))
-                .map((element) => regionToGeo(element, system))
-        ),
-        flatten(
-            sct.geo
-                .filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true))
-                .map((element) => geoToGeo(element, system))
-        ),
+        sct.regions
+            .filter((region) => (asr != null ? asr.regions.includes(region.id) : true))
+            .flatMap((element) => regionToGeo(element, system)),
+        sct.geo
+            .filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true))
+            .flatMap((element) => geoToGeo(element, "geo", system)),
         sct.airports.map((element) => airportToGeo(element, system)),
         sct.runways
             .filter((runway) => {
@@ -261,25 +221,27 @@ export function toGeoJson(
         sct.fixes
             .filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true))
             .map((element) => fixToGeo(element, system)),
-        flatten(sct.sid.map((element) => sidToGeo(element, system))),
-        flatten(
-            sct.star
-                .filter((star) => (asr != null ? asr.stars.includes(star.id) : true))
-                .map((element) => starToGeo(element, system))
-        ),
+        sct.sid
+            .flatMap((element) => geoToGeo(element, "sid", system)),
+        sct.star
+            .filter((star) => (asr != null ? asr.stars.includes(star.id) : true))
+            .flatMap((element) => geoToGeo(element, "star", system)),
         sct.labels.map((element) => labelToGeo(element, system)),
-        flatten(
-            Object.entries(ese.freetext).map(([section, labels]) =>
-                labels
-                    .filter((label) =>
-                        asr != null
-                            ? asr.freetext[section] != null &&
-                              asr.freetext[section].includes(label.text)
-                            : true
-                    )
-                    .map((label) => freetextToGeo(section, label, system))
-            )
+        Object.entries(ese.freetext).flatMap(([section, labels]) =>
+            labels
+                .filter((label) =>
+                    asr != null
+                        ? asr.freetext[section] != null &&
+                          asr.freetext[section].includes(label.text)
+                        : true
+                )
+                .map((label) => freetextToGeo(section, label, system))
         ),
+        sct.artcc.flatMap(artcc => geoToGeo(artcc, "artcc", system)),
+        sct.artccLow.flatMap(artcc => geoToGeo(artcc, "artcc-low", system)),
+        sct.artccHigh.flatMap(artcc => geoToGeo(artcc, "artcc-high", system)),
+        sct.highAirway.flatMap(airway => geoToGeo(airway, "high-airway", system)),
+        sct.lowAirway.flatMap(airway => geoToGeo(airway, "low-airway", system)),
     ]);
 
     return {
