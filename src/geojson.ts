@@ -141,6 +141,7 @@ function labelToGeo(label: Label, system: CoordinateSystem = 'UTM'): Feature {
         properties: {
             value: label.text,
             type: 'label',
+            color: label.color?.toRGB(),
         },
     };
 }
@@ -159,6 +160,7 @@ function freetextToGeo(section: string, label: Label, system: CoordinateSystem =
             section,
             value: label.text,
             type: 'label',
+            color: label.color?.toRGB(),
         },
     };
 }
