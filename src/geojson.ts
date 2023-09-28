@@ -201,7 +201,7 @@ export function toGeoJson(
             .flatMap((element) => regionToGeo(element, system)),
         sct.geo
             .filter((geo) => (asr != null ? asr.geo.includes(geo.id) : true))
-            .flatMap((element) => geoToGeo(element, "geo", system)),
+            .flatMap((element) => geoToGeo(element, 'geo', system)),
         sct.airports.map((element) => airportToGeo(element, system)),
         sct.runways
             .filter((runway) => {
@@ -221,11 +221,10 @@ export function toGeoJson(
         sct.fixes
             .filter((fix) => (asr != null ? asr.fixes.includes(fix.id) : true))
             .map((element) => fixToGeo(element, system)),
-        sct.sid
-            .flatMap((element) => geoToGeo(element, "sid", system)),
+        sct.sid.flatMap((element) => geoToGeo(element, 'sid', system)),
         sct.star
             .filter((star) => (asr != null ? asr.stars.includes(star.id) : true))
-            .flatMap((element) => geoToGeo(element, "star", system)),
+            .flatMap((element) => geoToGeo(element, 'star', system)),
         sct.labels.map((element) => labelToGeo(element, system)),
         Object.entries(ese.freetext).flatMap(([section, labels]) =>
             labels
@@ -237,11 +236,11 @@ export function toGeoJson(
                 )
                 .map((label) => freetextToGeo(section, label, system))
         ),
-        sct.artcc.flatMap(artcc => geoToGeo(artcc, "artcc", system)),
-        sct.artccLow.flatMap(artcc => geoToGeo(artcc, "artcc-low", system)),
-        sct.artccHigh.flatMap(artcc => geoToGeo(artcc, "artcc-high", system)),
-        sct.highAirway.flatMap(airway => geoToGeo(airway, "high-airway", system)),
-        sct.lowAirway.flatMap(airway => geoToGeo(airway, "low-airway", system)),
+        sct.artcc.flatMap((artcc) => geoToGeo(artcc, 'artcc', system)),
+        sct.artccLow.flatMap((artcc) => geoToGeo(artcc, 'artcc-low', system)),
+        sct.artccHigh.flatMap((artcc) => geoToGeo(artcc, 'artcc-high', system)),
+        sct.highAirway.flatMap((airway) => geoToGeo(airway, 'high-airway', system)),
+        sct.lowAirway.flatMap((airway) => geoToGeo(airway, 'low-airway', system)),
     ]);
 
     return {
