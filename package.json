@@ -20,6 +20,9 @@
     "prettier": {
         "singleQuote": true
     },
+    "engines": {
+        "node": "*"
+    },
     "homepage": "https://github.com/eirslett/sector-file-tools",
     "license": "MIT",
     "devDependencies": {
