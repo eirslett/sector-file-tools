@@ -214,7 +214,7 @@ describe('Generate GeoJSON', function () {
                 ],
             },
             emptyEse,
-            emptyAsr,
+            null,
             'WGS84'
         );
 
