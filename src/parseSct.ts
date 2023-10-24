@@ -295,7 +295,7 @@ export default function parseSct(input: string): SCT {
             parseGeo(currentSection as GeoType);
         } else if (currentSection === 'REGIONS') {
             if (line.indexOf('REGIONNAME') === 0) {
-                currentRegion = line.substr(11);
+                currentRegion = line.slice(11).split(';')[0].trim();
                 regionsByName[currentRegion] = regionsByName[currentRegion] || [];
             } else {
                 const parts = getParts(line);
