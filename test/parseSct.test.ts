@@ -545,7 +545,7 @@ ENCN Region                              N058.11.53.264 E008.04.26.812 N058.11.5
             parseSct(`
 #define COLOR_Building   3881787
 [REGIONS]
-REGIONNAME ENAT
+REGIONNAME ENAT ; test comment
 COLOR_Building             N069.58.40.755 E023.21.13.825 ; test comment
                            N069.58.40.262 E023.21.12.939; another test comment
                            N069.58.39.718 E023.21.15.557    ; third test comment
