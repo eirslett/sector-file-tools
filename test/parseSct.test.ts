@@ -21,6 +21,23 @@ const empty: SCT = {
     labels: [],
 };
 
+const SKG = {
+    id: 'SKG',
+    frequency: '112.800',
+    position: Position.latlon('N068.34.42.070', 'E015.02.05.729'),
+};
+
+const AND = {
+    id: 'AND',
+    frequency: '112.200',
+    position: Position.latlon('N069.17.16.180', 'E016.08.28.971'),
+};
+
+const GILGU = {
+    id: 'GILGU',
+    position: Position.latlon('N069.29.38.630', 'E017.30.23.749'),
+};
+
 describe('Parse SCT', function () {
     it('can parse empty string', function () {
         expect(parseSct('')).to.deep.equal(empty);
@@ -389,21 +406,6 @@ ENGM SID VIPPA VEMIN5A                   N060.13.50.001 E010.47.04.999 N060.09.5
     });
 
     it('read SID with navaids', function () {
-        const SKG = {
-            id: 'SKG',
-            frequency: '112.800',
-            position: Position.latlon('N068.34.42.070', 'E015.02.05.729'),
-        };
-        const AND = {
-            id: 'AND',
-            frequency: '112.200',
-            position: Position.latlon('N069.17.16.180', 'E016.08.28.971'),
-        };
-        const GILGU = {
-            id: 'GILGU',
-            position: Position.latlon('N069.29.38.630', 'E017.30.23.749'),
-        };
-
         expect(
             parseSct(`
 [VOR]
@@ -469,6 +471,41 @@ ENAL VORDME06                            N062.21.47.041 E005.47.59.690 N062.28.0
                             color,
                             start: Position.latlon('N062.28.04.418', 'E005.41.28.359'),
                             end: Position.latlon('N062.31.16.590', 'E005.40.11.240'),
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('use navaids from isec-file if not in sct-file', function () {
+        const isecData = [AND, SKG]
+
+        expect(
+            parseSct(`
+[FIXES]
+GILGU N069.29.38.630 E017.30.23.749
+
+[SID]
+0 FSS ENTC ALT Route                     SKG            SKG            AND            AND           
+                                         AND            AND            GILGU          GILGU
+        `, isecData)
+        ).to.eql({
+            ...empty,
+            fixes: [GILGU],
+            sid: [
+                {
+                    id: '0 FSS ENTC ALT Route',
+                    segments: [
+                        {
+                            color: null,
+                            start: SKG,
+                            end: AND,
+                        },
+                        {
+                            color: null,
+                            start: AND,
+                            end: GILGU,
                         },
                     ],
                 },
