@@ -50,14 +50,14 @@ function getParts(str: string): string[] {
         .map((part) => part.trim());
 }
 
-export default function parseSct(input: string): SCT {
+export default function parseSct(input: string, isecNavaids?: Navaid[]): SCT {
     const lines = input.split('\n').map((line) => line.trim());
 
     const infoLines: string[] = [];
     const defines: { [key: string]: Color } = {};
     const vor: VOR[] = [];
     const ndb: NDB[] = [];
-    const navaids: { [name: string]: Navaid } = {};
+    const navaids: { [name: string]: Navaid } = isecNavaids ? Object.fromEntries(isecNavaids.map(navaid => [navaid.id, navaid])) : {};
     const fixes: FIX[] = [];
     const airports: Airport[] = [];
     const runways: Runway[] = [];
